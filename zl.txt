@@ -4,8 +4,4 @@ sdjfioj
 sjfiojfoe
 时间佛 i积分为 甲方 j i osjio  复烤ij
 delete something
-<<<<<<< HEAD
 creating a new branch is  quick and simple 
-=======
-creating a new branch is  quick and simple
->>>>>>> featurel
