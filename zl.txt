@@ -7,3 +7,4 @@ delete something
 creating a new branch is  quick and simple
 add merge
 addd
+guanlifenzhi
