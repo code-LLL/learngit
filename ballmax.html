@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ball game</title>
+    <style type="text/css">
+        * {
+            border: none;
+            text-decoration: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        body,
+        html {
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            overflow: hidden;
+        }
+
+        #bac {
+            background-color: aliceblue;
+            position: relative;
+            width: 75%;
+            height: 75%;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #ball {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border-radius: 100%;
+            background-color: black;
+
+        }
+
+        .xian div {
+            background: black;
+            width: 15%;
+            height: 1%;
+            position: absolute;
+        }
+
+        .xian div:nth-child(1) {
+            top: 30%;
+            left: 20%;
+        }
+
+        .xian div:nth-child(2) {
+            top: 15%;
+            left: 45%;
+        }
+
+        .xian div:nth-child(3) {
+            top: 30%;
+            left: 70%;
+        }
+
+        #muban {
+            background-color: black;
+            width: 15%;
+            height: 2.85%;
+            position: absolute;
+            z-index: 5;
+        }
+        #text{
+            background: yellow;
+            position: absolute;
+            top: 96%;
+            height: 3%;
+            width: 15%;
+        }
+        #begin{
+            width: 30%;height: 30%;
+            position: absolute;
+            left: 50%;top: 50%;
+            transform: translate(-50%,-50%);
+            background-color: grey;
+            opacity: 0.8;
+            font-size: 40px;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #kaishi,#again{
+            cursor: pointer;
+        }
+        #kaishi:hover,#again:hover{
+            color: yellow;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="bac">
+        <p id="pp"></p>
+        <div id="ball" style="top: 94%;left:50%;"></div>
+        <div class="xian">
+            <div id="xian1"></div>
+            <div id="xian2"></div>
+            <div id="xian3"></div>
+        </div>
+        <div id="muban" style="top: 97%;left: 42.5%;"></div>
+    </div>
+
+    <div id="begin">
+        <div id="kaishi">开始游戏</div>
+       
+        <div id="again" style="display: none">游戏结束<br>再玩一次</div>
+    </div>
+    
+    <script>
+        var bac = document.getElementById('bac');
+        var ball = document.getElementById('ball');
+        var muban = document.getElementById('muban');
+        var kaishi =document.getElementById('kaishi');
+        var begin =document.getElementById('begin');
+        var again =document.getElementById('again');
+        var mubanx=42.5;
+        var time;
+        var x,y,a,b;
+        var ballheight=ball.offsetHeight/bac.offsetHeight;
+        var count=0;
+        var yspeed;
+        //   创建小球  
+
+        kaishi.onclick=function(){
+            move();
+            playgame();
+        }
+        again.onclick=function(){
+            move();
+            playgame();
+            count=1;
+        }
+
+        function move() {
+            // 初始化
+             x = 50,y = 94;
+             a = 1,b = 1;
+            //  y方向的速度
+             yspeed=Math.random()*0.15+0.3;
+            tt();
+        }
+        
+        function playgame(){
+            kaishi.style.display='none';
+            begin.style.display='none';
+            again.style.display='none';
+        }
+
+        function againgame(){
+            begin.style.display='flex';
+            again.style.display='block';
+        }
+
+
+        function tt(){
+                // 木板移动
+                bac.onmousemove = function () {
+                    if(count>0){
+                        var bacleft = (document.body.offsetWidth - bac.offsetWidth) / 2;
+                        mubanx = (window.event.clientX - bacleft) / bac.offsetWidth * 100;
+                        // console.log(mubanx);
+                        if (mubanx <= 7.5) mubanx = 7.5;
+                        if (mubanx >= 92.5) mubanx = 92.5;
+                        muban.style.left = mubanx - 7.5 + '%';
+                    }
+                }
+
+                // 反弹条件
+                 // 碰到障碍后
+                if (x >= 100 || x <= 0) a = -a;
+                if (y <= 0) b = -b;
+                if ((x >= 19 && x <= 37 && y >= 29 && y <= 31) ||
+                 (x >= 44 && x <= 60 && y >= 14 && y <= 16) ||
+                 (x >= 69 && x <= 85 && y >= 29 && y <= 31) )
+                 {
+                     
+                     b = -b;
+                
+                 }
+                if (x >= mubanx-8 && x <= mubanx + 8  && y >= 94 && y <= 97) {
+                        if(count>=1) b = -b;
+                        count++;
+                }
+                
+                console.log(count);
+                // 球的运动
+                if (a == 1) x += 0.1;
+                else x -= 0.1;
+                if (b == 1) y -= yspeed;
+                else y += yspeed;
+
+               if(count>5) time/=2;
+                ball.style.left = x + '%';
+                ball.style.top = y + '%';
+                t = setTimeout("tt()", 5);
+                
+                
+                // 游戏结束判定
+                if (y >= 100) {
+                    clearTimeout(t);
+                    muban.style.left="42.5%";
+                    ball.style.top = 94 + '%';
+                    ball.style.left = 50 + '%';
+                    count=0;
+                    againgame();
+
+                }
+            }
+
+        
+        
+        
+    </script>
+</body>
+
+</html>
